@@ -7,6 +7,30 @@ $(document).ready(function() {
     var key = "923dd5734cd0c672e44b457634e8ad6c"
     //create variable to put the current city info in
     var newCity = ""
+    //creating lat and long variables so they can be used in multiple functions
+    var currentLat = ""
+    var currentLong = ""
+
+    //create a function to save the list of cities to local storage
+    function saveLocal() {
+        var savedCity = JSON.stringify(citySearched);
+        localStorage.setItem("list", savedCity)
+    }
+
+    //create a function to pull the city list from local storage
+    // function pullLocal() {
+    //     saveLocal()
+    //     //pull the city list from local storage
+    //     var pulledCity = JSON.parse(localStorage.getItem("list"));
+    //     citySearched.push(pulledCity);  
+    //     //if there is anything in the saved list, then re-render the list
+    //     if (citySearched !== "null") {
+    //         renderCityList()
+    //     }
+    // }
+    
+    //run the function to render the list of cities
+    // pullLocal()
 
     //create a function to display the list of cities on the left of the screen
     function renderCityList () {
@@ -41,13 +65,30 @@ $(document).ready(function() {
             var fCurrentTemp = Math.floor((response.main.temp - 273.15) * 1.8 + 32);
             var windSpeed = Math.floor(response.wind.speed * 2.237);
             var weatherIcon = "https://openweathermap.org/img/wn/" + response.weather[0].icon + "@2x.png"
+            currentLat = response.coord.lat
+            currentLong = response.coord.lon
             //save input to the current weather locations on the page
             $("#currentCityDate").text(response.name + ",    " + moment().format("DD MMM YYYY"));
             $("#currentIcon").attr("src", weatherIcon);
             $("#currentTemp").text("Current temperature: " + fCurrentTemp + String.fromCharCode(176) + "F");
             $("#currentHumid").text("Current humidity: " + response.main.humidity + "%");
             $("#currentSpeed").text("Current wind speed: " + windSpeed + "mph");
+  
+            //run new api call to get the UV index
+            var uvQueryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + currentLat + "&lon=" + currentLong + "&appid=" + key
+            console.log(currentLat)
+            
+            $.ajax({
+                url: uvQueryURL,
+                method: "GET"
+            }).then(function(response) {
+                console.log(uvQueryURL)
+                console.log(response.value)
+                $("#currentUV").text("Current UV index: " + response.value)
+            });
+
         });
+        
 
     };
     
@@ -134,10 +175,9 @@ $(document).ready(function() {
 
                 //append to location on html
                 $("#forecast").append(newCard)
-
-            }
-
-
+            };
+            
+            console.log(citySearched)
         });
         
         
@@ -145,7 +185,7 @@ $(document).ready(function() {
     }
     
     
-    //when the button is clicked to submit the entered city, lots of stuff needs to happen
+    //when the button is clicked to submit the entered city, push to new city array and then run functions to display data for that city
     $("#button-addon2").on("click", function(event){
         event.preventDefault();
         
@@ -158,7 +198,9 @@ $(document).ready(function() {
         //clear the input box to prepare for next thing to be typed
         $("#entry").val("")
         
-        //call the function to render the cities on the screen
+        //call the function to save to local storage
+        saveLocal();
+        //call the function to render the added cities on the screen
         renderCityList();
         //call function that pulls current weather
         currentWeather();
