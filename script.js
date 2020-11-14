@@ -98,12 +98,42 @@ $(document).ready(function() {
                 },
             ]
             
-            //set variables to make temperature conversions and add info for icon link
-            var fForecastTemp = Math.floor((forecastData[i].temp - 273.15) * 1.8 + 32);
-            var weatherIcon = "https://openweathermap.org/img/wn/" + forecastData[i].icon + "@2x.png"
-
+            
             //set up loop to go through the 5 day forecast information and create and populate cards
-            // for (var i=0; i<)
+            for (var i=0; i < forecastData.length; i++) {
+                //set variables to make temperature conversions, add info for icon link, and convert the date
+                var fForecastTemp = Math.floor((forecastData[i].temp - 273.15) * 1.8 + 32);
+                var forecastIcon = "https://openweathermap.org/img/wn/" + forecastData[i].icon + ".png"
+                var forecastDate = "April" + forecastData[i].date
+
+                //set variables to make new divs and ul
+                var newCard = $("<div>").addClass("card").attr("style", "width: 9rem;");
+                var dateDisplay = $("<div>").addClass("card-header");
+                var newUL = $("<ul>").addClass("list-group list-group-flush");
+                var iconRow = $("<li>").addClass("list-group-item");
+                var newIcon = $("<img>").attr("src", forecastIcon);
+                var newTemp = $("<li>").addClass("list-group-item");
+                var newHumid = $("<li>").addClass("list-group-item");
+
+                //add text to items that will display text on the screen and added alt for img
+                dateDisplay.text(forecastData[i].forecastDate);
+                newIcon.attr("alt", "weather icon");
+                newTemp.text("T: " + fForecastTemp + String.fromCharCode(176) + "F");
+                newHumid.text("H: " + forecastData[i].humid + "%");
+
+                //append new items together
+                iconRow.append(newIcon);
+                newUL.append(iconRow);
+                newUL.append(newTemp);
+                newUL.append(newHumid);
+                newCard.append(dateDisplay);
+                newCard.append(newUL);
+
+                //append to location on html
+                $("#forecast").append(newCard)
+
+            }
+
 
         });
         
