@@ -76,15 +76,23 @@ $(document).ready(function() {
   
             //run new api call to get the UV index
             var uvQueryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + currentLat + "&lon=" + currentLong + "&appid=" + key
-            console.log(currentLat)
             
             $.ajax({
                 url: uvQueryURL,
                 method: "GET"
             }).then(function(response) {
-                console.log(uvQueryURL)
-                console.log(response.value)
-                $("#currentUV").text("Current UV index: " + response.value)
+                var uvValue = response.value
+                $("#currentUV").text("Current UV index: " + uvValue)
+
+                if (uvValue<3) {
+                    $("#currentUV").addClass("alert-success")
+                }
+                if (uvValue>2 && uvValue<8) {
+                    $("#currentUV").addClass("alert-warning")
+                }
+                if (uvValue>7) {
+                    $("#currentUV").addClass("alert-danger")
+                }
             });
 
         });
