@@ -1,6 +1,6 @@
 //make sure the page has loaded before doing anything
-$(document).ready(function() {
-    
+$(document).ready(function () {
+
     //create an array to store the list of cities that have been searched for so they can render on the left of the screen
     var citySearched = []
     //create variable for api key to be used throughout the document
@@ -23,18 +23,18 @@ $(document).ready(function() {
             citySearched = pulledCity
         };
     };
-    
+
     //run the function to render the list of cities
     // pullLocal()
 
     //create a function to display the list of cities on the left of the screen
-    function renderCityList () {
-        
+    function renderCityList() {
+
         //delete the content inside of the city searched array to prevent multiplying the list
         $("#cityList").empty();
 
         //create for loop to loop through cities and add them to the list shown on the page
-        for (var i=0; i < citySearched.length; i++) {
+        for (var i = 0; i < citySearched.length; i++) {
 
             //add new tag for each city and add it to the city list
             var newTag = $("<a>");
@@ -54,8 +54,7 @@ $(document).ready(function() {
         $.ajax({
             url: currentQueryURL,
             method: "GET"
-        }).then(function(response) {
-            console.log(response)
+        }).then(function (response) {
             //convert temperature to fahrenheit from kelvin, wind from meter/sec to mph, and adding link for icon
             var fCurrentTemp = Math.floor((response.main.temp - 273.15) * 1.8 + 32);
             var windSpeed = Math.floor(response.wind.speed * 2.237);
@@ -69,33 +68,30 @@ $(document).ready(function() {
             $("#currentTemp").text("Current temperature: " + fCurrentTemp + String.fromCharCode(176) + "F");
             $("#currentHumid").text("Current humidity: " + response.main.humidity + "%");
             $("#currentSpeed").text("Current wind speed: " + windSpeed + "mph");
-  
+
             //run new api call to get the UV index
             var uvQueryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + currentLat + "&lon=" + currentLong + "&appid=" + key
-            
+
             $.ajax({
                 url: uvQueryURL,
                 method: "GET"
-            }).then(function(response) {
+            }).then(function (response) {
                 var uvValue = response.value
                 $("#currentUV").text("Current UV index: " + uvValue)
                 $("#currentUV").removeClass();
-                if (uvValue<3) {
+                if (uvValue < 3) {
                     $("#currentUV").addClass("alert-success")
                 }
-                if (uvValue>2 && uvValue<8) {
+                if (uvValue > 2 && uvValue < 8) {
                     $("#currentUV").addClass("alert-warning")
                 }
-                if (uvValue>7) {
+                if (uvValue > 7) {
                     $("#currentUV").addClass("alert-danger")
                 }
             });
-
         });
-        
-
     };
-    
+
     //create function to pull forecast information
     function forecastWeather() {
 
@@ -104,14 +100,13 @@ $(document).ready(function() {
 
         //create variable for the api url for the forecast weather
         var forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast/daily?q=" + newCity + "&cnt=5&appid=" + key
-        
+
         //make api call for the forecast weather
         $.ajax({
             url: forecastQueryURL,
             method: "GET"
-        }).then(function(response) {
-            console.log(response)
-            
+        }).then(function (response) {
+
             //create array with the 5 day forecast information
             var forecastData = [
                 {
@@ -145,10 +140,10 @@ $(document).ready(function() {
                     humid: response.list[4].humidity,
                 },
             ]
-            
-            
+
+
             //set up loop to go through the 5 day forecast information and create and populate cards
-            for (var i=0; i < forecastData.length; i++) {
+            for (var i = 0; i < forecastData.length; i++) {
                 //set variables to make temperature conversions, add info for icon link, and convert the date
                 var fForecastTemp = Math.floor((forecastData[i].temp - 273.15) * 1.8 + 32);
                 var forecastIcon = "https://openweathermap.org/img/wn/" + forecastData[i].icon + ".png"
@@ -180,28 +175,22 @@ $(document).ready(function() {
                 //append to location on html
                 $("#forecast").append(newCard)
             };
-            
-            console.log(citySearched)
         });
-        
-        
-        
     }
-    
-    
+
     //when the button is clicked to submit the entered city, push to new city array and then run functions to display data for that city
-    $("#button-addon2").on("click", function(event){
+    $("#button-addon2").on("click", function (event) {
         event.preventDefault();
-        
+
         //add value to variable for new city from the new text that was entered
         newCity = $("#entry").val();
-        
+
         //add the text to the array of cities
         citySearched.push(newCity);
-        
+
         //clear the input box to prepare for next thing to be typed
         $("#entry").val("")
-        
+
         //call the function to save to local storage
         saveLocal();
         //call the function to render the added cities on the screen
@@ -212,14 +201,5 @@ $(document).ready(function() {
         forecastWeather();
 
     })
-
-
-
-
-
-
-
-
-
 
 })
