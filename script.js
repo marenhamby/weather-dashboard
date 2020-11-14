@@ -42,7 +42,7 @@ $(document).ready(function() {
             var windSpeed = Math.floor(response.wind.speed * 2.237);
             var weatherIcon = "https://openweathermap.org/img/wn/" + response.weather[0].icon + "@2x.png"
             //save input to the current weather locations on the page
-            $("#currentCityDate").text(response.name);
+            $("#currentCityDate").text(response.name + ",    " + moment().format("DD MMM YYYY"));
             $("#currentIcon").attr("src", weatherIcon);
             $("#currentTemp").text("Current temperature: " + fCurrentTemp + String.fromCharCode(176) + "F");
             $("#currentHumid").text("Current humidity: " + response.main.humidity + "%");
@@ -53,6 +53,9 @@ $(document).ready(function() {
     
     //create function to pull forecast information
     function forecastWeather() {
+
+        //delete the content inside of the forecast to prevent multiplying the list
+        $("#forecast").empty();
 
         //create variable for the api url for the forecast weather
         var forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast/daily?q=" + newCity + "&cnt=5&appid=" + key
@@ -67,31 +70,31 @@ $(document).ready(function() {
             //create array with the 5 day forecast information
             var forecastData = [
                 {
-                    date: response.list[0].dt,
+                    date: moment().add(1, "days").format("MMM/DD/YYYY"),
                     icon: response.list[0].weather[0].icon,
                     temp: response.list[0].temp.day,
                     humid: response.list[0].humidity,
                 },
                 {
-                    date: response.list[1].dt,
+                    date: moment().add(2, "days").format("MMM/DD/YYYY"),
                     icon: response.list[1].weather[0].icon,
                     temp: response.list[1].temp.day,
                     humid: response.list[1].humidity,
                 },
                 {
-                    date: response.list[2].dt,
+                    date: moment().add(3, "days").format("MMM/DD/YYYY"),
                     icon: response.list[2].weather[0].icon,
                     temp: response.list[2].temp.day,
                     humid: response.list[2].humidity,
                 },
                 {
-                    date: response.list[3].dt,
+                    date: moment().add(4, "days").format("MMM/DD/YYYY"),
                     icon: response.list[3].weather[0].icon,
                     temp: response.list[3].temp.day,
                     humid: response.list[3].humidity,
                 },
                 {
-                    date: response.list[4].dt,
+                    date: moment().add(5, "days").format("MMM/DD/YYYY"),
                     icon: response.list[4].weather[0].icon,
                     temp: response.list[4].temp.day,
                     humid: response.list[4].humidity,
@@ -104,7 +107,6 @@ $(document).ready(function() {
                 //set variables to make temperature conversions, add info for icon link, and convert the date
                 var fForecastTemp = Math.floor((forecastData[i].temp - 273.15) * 1.8 + 32);
                 var forecastIcon = "https://openweathermap.org/img/wn/" + forecastData[i].icon + ".png"
-                var forecastDate = "April" + forecastData[i].date
 
                 //set variables to make new divs and ul
                 var newCard = $("<div>").addClass("card").attr("style", "width: 9rem;");
@@ -116,7 +118,8 @@ $(document).ready(function() {
                 var newHumid = $("<li>").addClass("list-group-item");
 
                 //add text to items that will display text on the screen and added alt for img
-                dateDisplay.text(forecastData[i].forecastDate);
+
+                dateDisplay.text(forecastData[i].date);
                 newIcon.attr("alt", "weather icon");
                 newTemp.text("T: " + fForecastTemp + String.fromCharCode(176) + "F");
                 newHumid.text("H: " + forecastData[i].humid + "%");
