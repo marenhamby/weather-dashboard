@@ -7,9 +7,6 @@ $(document).ready(function() {
     var key = "923dd5734cd0c672e44b457634e8ad6c"
     //create variable to put the current city info in
     var newCity = ""
-    //creating lat and long variables so they can be used in multiple functions
-    var currentLat = ""
-    var currentLong = ""
 
     //create a function to save the list of cities to local storage
     function saveLocal() {
@@ -65,8 +62,9 @@ $(document).ready(function() {
             var fCurrentTemp = Math.floor((response.main.temp - 273.15) * 1.8 + 32);
             var windSpeed = Math.floor(response.wind.speed * 2.237);
             var weatherIcon = "https://openweathermap.org/img/wn/" + response.weather[0].icon + "@2x.png"
-            currentLat = response.coord.lat
-            currentLong = response.coord.lon
+            //added variables for the lat and lon coordinates in order to find the uv index
+            var currentLat = response.coord.lat
+            var currentLong = response.coord.lon
             //save input to the current weather locations on the page
             $("#currentCityDate").text(response.name + ",    " + moment().format("DD MMM YYYY"));
             $("#currentIcon").attr("src", weatherIcon);
