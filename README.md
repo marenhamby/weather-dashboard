@@ -17,4 +17,4 @@ https://marenhamby.github.io/weather-dashboard/
 
 ## Screenshot
 Here is a screenshot of what the weather page looks like:
-![weather page](.\assets\weather-page.PNG)
+![weather page](./assets/weather-page.PNG)
