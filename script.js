@@ -15,16 +15,14 @@ $(document).ready(function() {
     }
 
     //create a function to pull the city list from local storage
-    // function pullLocal() {
-    //     saveLocal()
-    //     //pull the city list from local storage
-    //     var pulledCity = JSON.parse(localStorage.getItem("list"));
-    //     citySearched.push(pulledCity);  
-    //     //if there is anything in the saved list, then re-render the list
-    //     if (citySearched !== "null") {
-    //         renderCityList()
-    //     }
-    // }
+    function pullLocal() {
+        //pull the city list from local storage
+        var pulledCity = JSON.parse(localStorage.getItem("list"));
+        //if there is anything in the saved list, then re-render the list
+        if (pulledCity !== "null") {
+            citySearched = pulledCity
+        };
+    };
     
     //run the function to render the list of cities
     // pullLocal()
@@ -81,7 +79,7 @@ $(document).ready(function() {
             }).then(function(response) {
                 var uvValue = response.value
                 $("#currentUV").text("Current UV index: " + uvValue)
-
+                $("#currentUV").removeClass();
                 if (uvValue<3) {
                     $("#currentUV").addClass("alert-success")
                 }
