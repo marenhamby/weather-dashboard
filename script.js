@@ -1,5 +1,7 @@
 //make sure the page has loaded before doing anything
 $(document).ready(function () {
+    //hide the forecast header
+    $("#title").hide()
 
     //create an array to store the list of cities that have been searched for so they can render on the left of the screen
     var citySearched = []
@@ -106,6 +108,8 @@ $(document).ready(function () {
             url: forecastQueryURL,
             method: "GET"
         }).then(function (response) {
+            //show the forecast header
+            $("#title").show();
 
             //create array with the 5 day forecast information
             var forecastData = [
